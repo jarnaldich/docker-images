@@ -18,10 +18,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         python-pyproj \
     && rm -rf /var/lib/apt/lists/*
 
-ENV SEN2COR_VERSION 2.8.0
-ENV SEN2COR_LONG_VERSION 02.08.00
+ENV SEN2COR_VERSION 2.10.0
+ENV SEN2COR_LONG_VERSION 02.10.01
 ENV SEN2COR_DOWNLOAD_URL "http://step.esa.int/thirdparties/sen2cor/${SEN2COR_VERSION}/Sen2Cor-${SEN2COR_LONG_VERSION}-Linux64.run"
-ENV SEN2COR_DOWNLOAD_HASH 0b61f903d96f24f073390330f1cf9bf958ee62eb8ece8f5c6419718c9ae2b21e
+ENV SEN2COR_DOWNLOAD_HASH 91e846010e7aed9bfd1ee97336d2105d7a481f39ac133e2c4a4447d94251b9e7
 ENV SEN2COR_INSTALLER "Sen2Cor.run"
 
 RUN useradd -ms /bin/bash user && \
@@ -32,6 +32,7 @@ USER user
 WORKDIR /home/user
 
 RUN curl -o ${SEN2COR_INSTALLER} -sSL ${SEN2COR_DOWNLOAD_URL} && \
+    sha256sum $SEN2COR_INSTALLER && \
     echo "$SEN2COR_DOWNLOAD_HASH $SEN2COR_INSTALLER" | sha256sum -c - && \
     bash ${SEN2COR_INSTALLER} --target /opt/sen2cor && \
     rm ${SEN2COR_INSTALLER}
@@ -47,7 +48,7 @@ RUN unset LD_LIBRARY_PATH \
     unset PYTHONUSERBASE
 
 ENV SEN2COR_PATH=/opt/sen2cor \
-    SEN2COR_HOME=/home/user/sen2cor/2.8
+    SEN2COR_HOME=/home/user/sen2cor/2.10
 
 ENV SEN2COR_BIN=$SEN2COR_PATH/lib/python2.7/site-packages/sen2cor \
     PATH=$SEN2COR_PATH/bin:${PATH} \
